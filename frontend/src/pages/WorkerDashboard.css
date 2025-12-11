@@ -1,0 +1,12 @@
+@import '../styles/variables.css';
+.worker-wrap{max-width:var(--max-width);margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.worker-top{display:flex;justify-content:space-between;align-items:center;padding:12px}
+.worker-info{display:flex;gap:12px;align-items:center}
+.worker-list{padding:12px}
+.worker-item{display:flex;justify-content:space-between;gap:12px;padding:12px;border-radius:12px;border:1px solid rgba(16,24,40,0.04);background:#fff;margin-bottom:10px}
+.wi-left{flex:1}
+.wi-right{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.stat-btn{background:transparent;border:1px solid rgba(16,24,40,0.06);padding:8px 10px;border-radius:8px}
+.btn.completed{background:var(--accent);color:#fff}
+.refresh-area{display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px}
+@media(max-width:900px){.worker-item{flex-direction:column;align-items:flex-start}}

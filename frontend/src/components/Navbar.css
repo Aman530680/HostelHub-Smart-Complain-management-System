@@ -1,0 +1,15 @@
+@import '../styles/variables.css';
+
+.nav{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 20px;background:linear-gradient(90deg,var(--primary),#2f78d6);border-radius:14px;color:#fff;
+  position:sticky;top:12px;z-index:40;margin-bottom:18px;max-width:var(--max-width);margin-left:auto;margin-right:auto;
+}
+.nav-left{display:flex;align-items:center;gap:12px;cursor:pointer}
+.logo-img{width:48px;height:48px;border-radius:10px;background:#fff;padding:8px}
+.brand{font-weight:800;font-size:1.15rem}
+.nav-center{display:flex;gap:8px;align-items:center}
+.link-btn{background:transparent;border:none;color:rgba(255,255,255,0.95);padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:600}
+.link-btn:hover{background:rgba(255,255,255,0.08)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.user-area{display:flex;align-items:center;gap:8px;color:#fff}

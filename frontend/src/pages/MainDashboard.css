@@ -1,0 +1,13 @@
+@import '../styles/variables.css';
+.hero{
+  display:flex;gap:18px;align-items:center;padding:28px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  color:#fff;box-shadow:0 10px 36px rgba(16,24,40,0.06)
+}
+.hero-left{flex:1}
+.hero-right{flex:1;display:flex;justify-content:center;align-items:center}
+.hero-logo{width:96px;height:96px;border-radius:14px;background:#fff;padding:12px;display:block;margin-bottom:12px}
+.hero-left h1{font-size:36px;margin-bottom:6px}
+.hero-left p{color:rgba(255,255,255,0.9);margin-bottom:14px}
+.hero-actions{display:flex;gap:12px}
+.section.card{margin-top:18px;padding:18px;color:var(--text)}
+.section h2{margin-bottom:8px}

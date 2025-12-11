@@ -1,0 +1,8 @@
+.status-badge{
+  padding:6px 10px;border-radius:999px;font-weight:700;font-size:0.85rem;display:inline-block;text-transform:capitalize;
+  box-shadow:0 2px 8px rgba(16,24,40,0.04)
+}
+.status-pending{background:var(--warning);color:#7A5A00}
+.status-accepted{background:var(--primary);color:#fff}
+.status-resolved,.status-completed{background:var(--success);color:#fff}
+.status-rejected{background:var(--danger);color:#fff}

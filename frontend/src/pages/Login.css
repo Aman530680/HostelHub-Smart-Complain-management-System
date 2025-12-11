@@ -1,0 +1,6 @@
+.login-page { max-width:480px; margin:20px auto; }
+.card { padding:16px; background:#fff; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+.form-row { margin-bottom:12px; }
+.input { width:100%; padding:8px; border:1px solid #ddd; border-radius:6px; }
+.btn { padding:10px 14px; background:#0ea5a4; color:white; border:none; border-radius:6px; cursor:pointer; }
+.small { color:#f00; margin-top:8px; }

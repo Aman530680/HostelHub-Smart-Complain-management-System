@@ -1,0 +1,15 @@
+@import '../styles/variables.css';
+.student-wrap{display:grid;grid-template-columns:380px 1fr;gap:18px;max-width:var(--max-width);margin:0 auto}
+.card{padding:18px;border-radius:14px}
+.student-left h3{margin-bottom:6px}
+.category-list{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.pill{padding:8px 12px;border-radius:999px;background:#fff;border:1px solid rgba(16,24,40,0.04);cursor:pointer}
+.pill.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.complaint-form{display:flex;flex-direction:column;gap:10px}
+.form-actions{display:flex;gap:8px;align-items:center}
+.complaint-table{width:100%;border-collapse:collapse;margin-top:12px}
+.complaint-table th,.complaint-table td{padding:12px;border-bottom:1px solid rgba(16,24,40,0.04)}
+.msg-td{max-width:460px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn.small{padding:6px 8px;font-size:0.9rem}
+.refresh-row{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-bottom:8px}
+@media(max-width:900px){.student-wrap{grid-template-columns:1fr;}}
