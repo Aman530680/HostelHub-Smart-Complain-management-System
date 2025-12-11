@@ -1,15 +1,25 @@
 {
-  "name": "hostelhub-(1)",
+  "name": "hostelhub",
   "version": "1.0.0",
-  "description": "",
+  "description": "Hostel Hub MERN App",
   "main": "index.js",
   "scripts": {
+    "frontend": "cd frontend && npm start",
+    "backend": "cd backend && npm run dev",
+    "start:all": "concurrently \"npm:frontend\" \"npm:backend\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Aman Karn",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^9.2.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aman530680/hostel-hub-mern.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Aman530680/hostel-hub-mern/issues"
+  },
+  "homepage": "https://github.com/Aman530680/hostel-hub-mern#readme"
 }
