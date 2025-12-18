@@ -1,73 +1,163 @@
 @import './variables.css';
 
-*{box-sizing:border-box}
-html,body,#root{height:100%}
-body{
-  margin:0;
-  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  line-height:1.4;
+* {
+  box-sizing: border-box;
 }
 
-.app-container{max-width:var(--max-width);margin:28px auto;padding:0 18px}
-
-/* Card */
-.card{
-  background:var(--panel);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow-1);
-  border:1px solid rgba(16,24,40,0.04);
-  padding:16px;
+html, 
+body, 
+#root {
+  height: 100%;
 }
 
-/* Typography */
-h1,h2,h3,h4{margin:0 0 8px 0}
-p{margin:0 0 12px 0;color:var(--muted)}
-.small{font-size:0.9rem;color:var(--muted)}
-
-/* Buttons */
-.btn{
-  background:var(--primary);
-  color:#fff;
-  border:none;
-  padding:8px 12px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:600;
-  transition:transform .08s ease, box-shadow .08s;
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-.btn:hover{transform:translateY(-2px)}
-.btn.ghost{background:transparent;color:var(--primary);border:1px solid rgba(68,142,228,0.12)}
-.btn.small{padding:6px 8px;font-size:0.9rem;border-radius:8px}
 
-/* Input */
-.input, textarea, select{
-  width:100%;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid rgba(16,24,40,0.06);
-  background:#fff;
-  color:var(--text);
-  font-size:0.95rem;
+.app-container {
+  max-width: var(--max-width);
+  margin: 32px auto;
+  padding: 0 20px;
 }
-textarea{min-height:100px;resize:vertical}
 
-/* Tables */
-.table{width:100%;border-collapse:collapse}
-.table th,.table td{padding:12px;border-bottom:1px solid rgba(16,24,40,0.04);text-align:left}
-.table th{font-weight:700;color:var(--muted-2);font-size:0.95rem}
+.card {
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid rgba(16, 24, 40, 0.04);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+}
 
-/* Utilities */
-.row{display:flex;gap:12px}
-.col{flex:1}
-.right{margin-left:auto}
-.kv{font-weight:700;color:var(--muted-2)}
+h1, h2, h3, h4 {
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
 
-/* responsive */
-@media (max-width:900px){
-  .app-container{padding:12px}
-  .row{flex-direction:column}
+p {
+  margin: 0 0 16px 0;
+  color: var(--muted);
+}
+
+.small {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid rgba(68, 142, 228, 0.2);
+}
+
+.btn.ghost:hover {
+  background: rgba(68, 142, 228, 0.05);
+}
+
+.btn.small {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  border-radius: 8px;
+}
+
+.input, 
+textarea, 
+select {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  background: #fff;
+  color: var(--text);
+  border: 1px solid rgba(16, 24, 40, 0.1);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus, 
+textarea:focus {
+  border-color: var(--primary);
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, 
+.table td {
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(16, 24, 40, 0.05);
+}
+
+.table th {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--muted-2);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+}
+
+.col {
+  flex: 1;
+}
+
+.right {
+  margin-left: auto;
+}
+
+.kv {
+  font-weight: 700;
+  color: var(--muted-2);
+}
+
+@media (max-width: 900px) {
+  .app-container {
+    padding: 16px;
+    margin: 16px auto;
+  }
+
+  .row {
+    flex-direction: column;
+    gap: 12px;
+  }
 }
