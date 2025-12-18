@@ -4,6 +4,7 @@
   "description": "Hostel Hub MERN App",
   "main": "index.js",
   "scripts": {
+    "start": "concurrently \"npm:frontend\" \"npm:backend\"",
     "frontend": "cd frontend && npm start",
     "backend": "cd backend && npm run dev",
     "start:all": "concurrently \"npm:frontend\" \"npm:backend\"",

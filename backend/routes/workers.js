@@ -1,5 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const { getAll } = require('../controllers/workerController')
-router.get('/', getAll)
+
+router.get('/', (req, res) => {
+  res.json({ message: 'Workers endpoint' })
+})
+
 module.exports = router

@@ -37,12 +37,39 @@ export default function Register() {
           {role === 'student' && <>
             <div className="form-row"><label>Student ID</label><input name="student_id" onChange={onChange} value={form.student_id||''} className="input" /></div>
             <div className="form-row"><label>Room</label><input name="main_room_number" onChange={onChange} value={form.main_room_number||''} className="input" /></div>
-            <div className="form-row"><label>Department</label><input name="department" onChange={onChange} value={form.department||''} className="input" /></div>
-            <div className="form-row"><label>Hostel Block</label><input name="hostel_block" onChange={onChange} value={form.hostel_block||''} className="input" /></div>
+            <div className="form-row"><label>Department</label>
+              <select name="department" onChange={onChange} value={form.department||''} className="input">
+                <option value="">Select Department</option>
+                <option value="CSE">CSE</option>
+                <option value="AIML">AIML</option>
+                <option value="CCE">CCE</option>
+                <option value="EEE">EEE</option>
+                <option value="IT">IT</option>
+              </select>
+            </div>
+            <div className="form-row"><label>Hostel Block</label>
+              <select name="hostel_block" onChange={onChange} value={form.hostel_block||''} className="input">
+                <option value="">Select Block</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+              </select>
+            </div>
           </>}
           {role === 'warden' && <>
             <div className="form-row"><label>Warden ID</label><input name="warden_id" onChange={onChange} value={form.warden_id||''} className="input" /></div>
-            <div className="form-row"><label>Hostel Block</label><input name="hostel_block" onChange={onChange} value={form.hostel_block||''} className="input" /></div>
+            <div className="form-row"><label>Hostel Block</label>
+              <select name="hostel_block" onChange={onChange} value={form.hostel_block||''} className="input">
+                <option value="">Select Block</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+              </select>
+            </div>
           </>}
           {role === 'worker' && <>
             <div className="form-row"><label>Worker ID</label><input name="worker_id" onChange={onChange} value={form.worker_id||''} className="input" /></div>

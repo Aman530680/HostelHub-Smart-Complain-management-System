@@ -1,11 +1,14 @@
 const mongoose = require('mongoose')
-const ComplaintSchema = new mongoose.Schema({
-  student_id: String,
-  complaint_category: String,
-  message: String,
-  image_url: String,
-  status: String,
-  warden_message: String,
-  worker_updates: [{ worker_id: String, message: String }]
+
+const complaintSchema = new mongoose.Schema({
+  complaint_id: { type: String, required: true, unique: true },
+  student_id: { type: String, required: true },
+  category: { type: String, required: true, enum: ['electricity', 'plumbing', 'carpentry'] },
+  description: { type: String, required: true },
+  status: { type: String, default: 'pending', enum: ['pending', 'assigned', 'in-progress', 'completed'] },
+  assigned_worker: { type: String, default: null },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now }
 }, { timestamps: true })
-module.exports = mongoose.model('Complaint', ComplaintSchema)
+
+module.exports = mongoose.model('Complaint', complaintSchema)

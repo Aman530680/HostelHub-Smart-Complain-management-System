@@ -1,5 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const { getAll } = require('../controllers/wardenController')
-router.get('/', getAll)
+
+router.get('/', (req, res) => {
+  res.json({ message: 'Wardens endpoint' })
+})
+
 module.exports = router

@@ -1,53 +1,54 @@
-const { students, wardens, workers } = require('../data/dummyData')
-function register(req, res) {
-  const { role } = req.body
-  if (role === 'student') {
-    const { student_id, main_room_number, department, hostel_block, password } = req.body
-    if (!student_id || !password) return res.status(400).json({ message: 'Missing' })
-    const exists = students.find(s => s.student_id === student_id)
-    if (exists) return res.status(400).json({ message: 'Exists' })
-    students.push({ student_id, main_room_number, department, hostel_block, password })
-    return res.json({ message: 'ok' })
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const Student = require('../models/Student')
+const Warden = require('../models/Warden')
+const Worker = require('../models/Worker')
+
+const register = async (req, res) => {
+  try {
+    const { role, password, ...userData } = req.body
+    const hashedPassword = await bcrypt.hash(password, 10)
+    
+    let user
+    if (role === 'student') {
+      user = new Student({ ...userData, password: hashedPassword, role })
+    } else if (role === 'warden') {
+      user = new Warden({ ...userData, password: hashedPassword, role })
+    } else if (role === 'worker') {
+      user = new Worker({ ...userData, password: hashedPassword, role })
+    } else {
+      return res.status(400).json({ message: 'Invalid role' })
+    }
+    
+    await user.save()
+    res.status(201).json({ message: 'User registered successfully' })
+  } catch (error) {
+    res.status(400).json({ message: error.message })
   }
-  if (role === 'warden') {
-    const { warden_id, hostel_block, password } = req.body
-    if (!warden_id || !password) return res.status(400).json({ message: 'Missing' })
-    const exists = wardens.find(w => w.warden_id === warden_id)
-    if (exists) return res.status(400).json({ message: 'Exists' })
-    wardens.push({ warden_id, hostel_block, password })
-    return res.json({ message: 'ok' })
-  }
-  if (role === 'worker') {
-    const { worker_id, contact, category, password } = req.body
-    if (!worker_id || !password) return res.status(400).json({ message: 'Missing' })
-    const exists = workers.find(w => w.worker_id === worker_id)
-    if (exists) return res.status(400).json({ message: 'Exists' })
-    workers.push({ worker_id, contact, category, password })
-    return res.json({ message: 'ok' })
-  }
-  return res.status(400).json({ message: 'Unknown role' })
 }
-function login(req, res) {
-  const { role } = req.body
-  const password = req.body.password
-  if (role === 'student') {
-    const id = req.body.student_id
-    const u = students.find(s => s.student_id === id && s.password === password)
-    if (!u) return res.status(401).json({ message: 'Invalid' })
-    return res.json({ user: { role: 'student', id: u.student_id } })
+
+const login = async (req, res) => {
+  try {
+    const { role, password, student_id, warden_id, worker_id } = req.body
+    let user
+    
+    if (role === 'student') {
+      user = await Student.findOne({ student_id })
+    } else if (role === 'warden') {
+      user = await Warden.findOne({ warden_id })
+    } else if (role === 'worker') {
+      user = await Worker.findOne({ worker_id })
+    }
+    
+    if (!user || !await bcrypt.compare(password, user.password)) {
+      return res.status(401).json({ message: 'Invalid credentials' })
+    }
+    
+    const token = jwt.sign({ id: user._id, role }, process.env.JWT_SECRET, { expiresIn: '24h' })
+    res.json({ token, role, user })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
   }
-  if (role === 'warden') {
-    const id = req.body.warden_id
-    const u = wardens.find(w => w.warden_id === id && w.password === password)
-    if (!u) return res.status(401).json({ message: 'Invalid' })
-    return res.json({ user: { role: 'warden', id: u.warden_id } })
-  }
-  if (role === 'worker') {
-    const id = req.body.worker_id
-    const u = workers.find(w => w.worker_id === id && w.password === password)
-    if (!u) return res.status(401).json({ message: 'Invalid' })
-    return res.json({ user: { role: 'worker', id: u.worker_id } })
-  }
-  return res.status(400).json({ message: 'Unknown role' })
 }
+
 module.exports = { register, login }
