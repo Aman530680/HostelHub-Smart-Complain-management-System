@@ -69,11 +69,15 @@ router.delete('/:id', async (req, res) => {
   }
 })
 
-// Warden actions
+// Update complaint status
 router.patch('/:id/status', async (req, res) => {
   try {
     const { status, assigned_worker_id, warden_comments } = req.body
-    const updateData = { status, warden_comments }
+    const updateData = { status }
+    
+    if (warden_comments) {
+      updateData.warden_comments = warden_comments
+    }
     
     if (assigned_worker_id) {
       const worker = await Worker.findById(assigned_worker_id)

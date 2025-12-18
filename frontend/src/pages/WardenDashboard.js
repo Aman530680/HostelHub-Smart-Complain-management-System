@@ -4,14 +4,11 @@ import '../styles/status.css'
 
 export default function WardenDashboard() {
   const [complaints, setComplaints] = useState([])
-  const [workers, setWorkers] = useState([])
   const [loading, setLoading] = useState(false)
-  const [selectedWorker, setSelectedWorker] = useState({})
   const [wardenComments, setWardenComments] = useState({})
 
   useEffect(() => {
     loadComplaints()
-    loadWorkers()
   }, [])
 
   async function loadComplaints() {
@@ -26,23 +23,12 @@ export default function WardenDashboard() {
     setLoading(false)
   }
 
-  async function loadWorkers() {
-    try {
-      const res = await fetch('http://localhost:5000/workers')
-      const data = await res.json()
-      setWorkers(Array.isArray(data) ? data : [])
-    } catch {
-      setWorkers([])
-    }
-  }
 
-  async function updateComplaintStatus(id, status, workerId = null) {
+
+  async function updateComplaintStatus(id, status) {
     const body = {
       status,
       warden_comments: wardenComments[id] || ''
-    }
-    if (workerId) {
-      body.assigned_worker_id = workerId
     }
 
     try {
@@ -55,18 +41,8 @@ export default function WardenDashboard() {
       if (res.ok) {
         setComplaints(prev => prev.map(c => c.id === data.id ? data : c))
         setWardenComments(prev => ({ ...prev, [id]: '' }))
-        setSelectedWorker(prev => ({ ...prev, [id]: '' }))
       }
     } catch {}
-  }
-
-  function acceptComplaint(id) {
-    const workerId = selectedWorker[id]
-    if (!workerId) {
-      alert('Please select a worker to assign this complaint')
-      return
-    }
-    updateComplaintStatus(id, 'accepted', workerId)
   }
 
   const pendingComplaints = complaints.filter(c => c.status === 'pending')
@@ -98,19 +74,6 @@ export default function WardenDashboard() {
             </div>
             <div className="complaint-actions">
               <div className="form-row">
-                <label>Assign Worker:</label>
-                <select 
-                  value={selectedWorker[c.id] || ''} 
-                  onChange={e => setSelectedWorker(prev => ({ ...prev, [c.id]: e.target.value }))}
-                  className="input"
-                >
-                  <option value="">Select Worker</option>
-                  {workers.filter(w => w.category === c.category).map(w => (
-                    <option key={w.id} value={w.id}>{w.name} ({w.category})</option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-row">
                 <label>Comments:</label>
                 <textarea 
                   value={wardenComments[c.id] || ''}
@@ -120,7 +83,7 @@ export default function WardenDashboard() {
                 />
               </div>
               <div className="action-buttons">
-                <button className="btn" onClick={() => acceptComplaint(c.id)}>Accept & Assign</button>
+                <button className="btn" onClick={() => updateComplaintStatus(c.id, 'accepted')}>Accept</button>
                 <button className="btn danger" onClick={() => updateComplaintStatus(c.id, 'rejected')}>Reject</button>
               </div>
             </div>
@@ -140,7 +103,7 @@ export default function WardenDashboard() {
               <p><strong>Room:</strong> {c.room_number}</p>
               <p><strong>Category:</strong> {c.category}</p>
               <p><strong>Description:</strong> {c.description}</p>
-              <p><strong>Assigned to:</strong> {c.assigned_worker_name}</p>
+              {c.assigned_worker_name && <p><strong>Assigned to:</strong> {c.assigned_worker_name}</p>}
               <p><strong>Status:</strong> <span className={`status-badge status-${c.status}`}>{c.status}</span></p>
               {c.image && <img src={c.image} alt="" className="complaint-image" />}
               {c.warden_comments && <p><strong>Comments:</strong> {c.warden_comments}</p>}
@@ -161,7 +124,7 @@ export default function WardenDashboard() {
               <p><strong>Room:</strong> {c.room_number}</p>
               <p><strong>Category:</strong> {c.category}</p>
               <p><strong>Status:</strong> <span className={`status-badge status-${c.status}`}>{c.status}</span></p>
-              {c.assigned_worker_name && <p><strong>Handled by:</strong> {c.assigned_worker_name}</p>}
+              {c.assigned_worker_name && <p><strong>Completed by:</strong> {c.assigned_worker_name}</p>}
               {c.warden_comments && <p><strong>Comments:</strong> {c.warden_comments}</p>}
             </div>
           </div>

@@ -16,7 +16,7 @@ export default function WorkerDashboard() {
     if (!user) return
     setLoading(true)
     try {
-      const res = await fetch(`http://localhost:5000/complaints/worker/${user.id}`)
+      const res = await fetch('http://localhost:5000/complaints/all')
       const data = await res.json()
       setComplaints(Array.isArray(data) ? data : [])
     } catch {
@@ -26,11 +26,16 @@ export default function WorkerDashboard() {
   }
 
   async function updateStatus(id, status) {
+    const body = { status }
+    if (status === 'in-progress' && !complaints.find(c => c.id === id).assigned_worker_id) {
+      body.assigned_worker_id = user.id
+    }
+    
     try {
       const res = await fetch(`http://localhost:5000/complaints/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
+        body: JSON.stringify(body)
       })
       const data = await res.json()
       if (res.ok) {
@@ -39,9 +44,9 @@ export default function WorkerDashboard() {
     } catch {}
   }
 
-  const assignedComplaints = complaints.filter(c => c.status === 'accepted')
-  const inProgressComplaints = complaints.filter(c => c.status === 'in-progress')
-  const completedComplaints = complaints.filter(c => c.status === 'completed')
+  const availableComplaints = complaints.filter(c => c.status === 'accepted' && !c.assigned_worker_id)
+  const myInProgressComplaints = complaints.filter(c => c.status === 'in-progress' && c.assigned_worker_id === user?.id)
+  const myCompletedComplaints = complaints.filter(c => c.status === 'completed' && c.assigned_worker_id === user?.id)
 
   return (
     <div className="worker-wrap">
@@ -53,10 +58,10 @@ export default function WorkerDashboard() {
         </button>
       </div>
 
-      {/* ASSIGNED COMPLAINTS */}
+      {/* AVAILABLE WORK */}
       <div className="complaints-section card">
-        <h3>New Assignments ({assignedComplaints.length})</h3>
-        {assignedComplaints.map(c => (
+        <h3>Available Work ({availableComplaints.length})</h3>
+        {availableComplaints.map(c => (
           <div key={c.id} className="complaint-card">
             <div className="complaint-info">
               <h4>{c.title}</h4>
@@ -69,18 +74,18 @@ export default function WorkerDashboard() {
             </div>
             <div className="complaint-actions">
               <button className="btn" onClick={() => updateStatus(c.id, 'in-progress')}>
-                Start Work
+                Take This Job
               </button>
             </div>
           </div>
         ))}
-        {assignedComplaints.length === 0 && <p>No new assignments</p>}
+        {availableComplaints.length === 0 && <p>No available work</p>}
       </div>
 
-      {/* IN PROGRESS COMPLAINTS */}
+      {/* MY IN PROGRESS WORK */}
       <div className="complaints-section card">
-        <h3>In Progress ({inProgressComplaints.length})</h3>
-        {inProgressComplaints.map(c => (
+        <h3>My Work In Progress ({myInProgressComplaints.length})</h3>
+        {myInProgressComplaints.map(c => (
           <div key={c.id} className="complaint-card">
             <div className="complaint-info">
               <h4>{c.title}</h4>
@@ -98,13 +103,13 @@ export default function WorkerDashboard() {
             </div>
           </div>
         ))}
-        {inProgressComplaints.length === 0 && <p>No work in progress</p>}
+        {myInProgressComplaints.length === 0 && <p>No work in progress</p>}
       </div>
 
-      {/* COMPLETED COMPLAINTS */}
+      {/* MY COMPLETED WORK */}
       <div className="complaints-section card">
-        <h3>Completed Work ({completedComplaints.length})</h3>
-        {completedComplaints.map(c => (
+        <h3>My Completed Work ({myCompletedComplaints.length})</h3>
+        {myCompletedComplaints.map(c => (
           <div key={c.id} className="complaint-card">
             <div className="complaint-info">
               <h4>{c.title}</h4>
@@ -115,7 +120,7 @@ export default function WorkerDashboard() {
             </div>
           </div>
         ))}
-        {completedComplaints.length === 0 && <p>No completed work yet</p>}
+        {myCompletedComplaints.length === 0 && <p>No completed work yet</p>}
       </div>
     </div>
   )
