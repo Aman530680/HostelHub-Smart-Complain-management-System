@@ -1,94 +1,132 @@
-.worker-wrap {
+.worker-dashboard {
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.worker-header {
-  text-align: center;
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
   margin-bottom: 24px;
 }
 
-.worker-header h2 {
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.dashboard-header h2 {
   margin: 0 0 8px 0;
   color: #111827;
 }
 
-.worker-header p {
-  margin: 0 0 16px 0;
+.dashboard-header p {
+  margin: 0;
   color: #6b7280;
 }
 
-.complaints-section {
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid #e5e7eb;
   margin-bottom: 24px;
 }
 
-.complaints-section h3 {
-  margin: 0 0 16px 0;
-  color: #374151;
-  border-bottom: 2px solid #e5e7eb;
-  padding-bottom: 8px;
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f3f4f6;
 }
 
-.complaint-card {
+.panel-title {
+  margin: 0;
+  color: #111827;
+  font-size: 1.25rem;
+}
+
+.job-container {
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   align-items: start;
   padding: 20px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  margin-bottom: 16px;
   background: #f9fafb;
+  margin-bottom: 16px;
 }
 
-.complaint-info {
+.job-details {
   flex: 1;
 }
 
-.complaint-info h4 {
+.job-details h4 {
   margin: 0 0 12px 0;
   color: #111827;
 }
 
-.complaint-info p {
+.job-details p {
   margin: 4px 0;
   color: #374151;
 }
 
-.complaint-image {
-  width: 120px;
-  height: auto;
+.job-image {
+  width: 100px;
   border-radius: 6px;
   margin: 8px 0;
 }
 
-.complaint-actions {
+.job-actions {
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-width: 120px;
 }
 
+.btn {
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  background: #3b82f6;
+  color: white;
+  text-align: center;
+}
+
+.btn:hover {
+  background: #2563eb;
+}
+
 .btn.success {
   background: #059669;
-  color: white;
 }
 
 .btn.success:hover {
   background: #047857;
 }
 
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+  background: #f9fafb;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+}
+
 @media (max-width: 700px) {
-  .worker-wrap {
-    padding: 16px;
-  }
-  
-  .complaint-card {
+  .job-container {
     flex-direction: column;
     gap: 16px;
   }
   
-  .complaint-actions {
+  .job-actions {
     align-self: stretch;
   }
 }

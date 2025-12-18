@@ -59,13 +59,14 @@ export default function WardenDashboard() {
         </button>
       </div>
 
-      {/* PENDING COMPLAINTS */}
-      <div className="complaints-section card">
-        <h3>Pending Complaints ({pendingComplaints.length})</h3>
+      <div className="dashboard-grid">
+        {/* PENDING COMPLAINTS */}
+        <div className="complaints-section card">
+          <h3>Pending Complaints ({pendingComplaints.length})</h3>
         {pendingComplaints.map(c => (
           <div key={c.id} className="complaint-card">
             <div className="complaint-info">
-              <h4>{c.title}</h4>
+              <h4>{c.category} Issue</h4>
               <p><strong>Student:</strong> {c.student_name}</p>
               <p><strong>Room:</strong> {c.room_number}</p>
               <p><strong>Category:</strong> {c.category}</p>
@@ -89,16 +90,16 @@ export default function WardenDashboard() {
             </div>
           </div>
         ))}
-        {pendingComplaints.length === 0 && <p>No pending complaints</p>}
-      </div>
+          {pendingComplaints.length === 0 && <div className="empty-box">No pending complaints</div>}
+        </div>
 
-      {/* ACTIVE COMPLAINTS */}
-      <div className="complaints-section card">
-        <h3>Active Complaints ({activeComplaints.length})</h3>
+        {/* ACTIVE COMPLAINTS */}
+        <div className="complaints-section card">
+          <h3>Active Complaints ({activeComplaints.length})</h3>
         {activeComplaints.map(c => (
           <div key={c.id} className="complaint-card">
             <div className="complaint-info">
-              <h4>{c.title}</h4>
+              <h4>{c.category} Issue</h4>
               <p><strong>Student:</strong> {c.student_name}</p>
               <p><strong>Room:</strong> {c.room_number}</p>
               <p><strong>Category:</strong> {c.category}</p>
@@ -110,7 +111,8 @@ export default function WardenDashboard() {
             </div>
           </div>
         ))}
-        {activeComplaints.length === 0 && <p>No active complaints</p>}
+          {activeComplaints.length === 0 && <div className="empty-box">No active complaints</div>}
+        </div>
       </div>
 
       {/* COMPLETED COMPLAINTS */}
@@ -119,7 +121,7 @@ export default function WardenDashboard() {
         {completedComplaints.map(c => (
           <div key={c.id} className="complaint-card">
             <div className="complaint-info">
-              <h4>{c.title}</h4>
+              <h4>{c.category} Issue</h4>
               <p><strong>Student:</strong> {c.student_name}</p>
               <p><strong>Room:</strong> {c.room_number}</p>
               <p><strong>Category:</strong> {c.category}</p>
@@ -129,7 +131,7 @@ export default function WardenDashboard() {
             </div>
           </div>
         ))}
-        {completedComplaints.length === 0 && <p>No completed complaints</p>}
+        {completedComplaints.length === 0 && <div className="empty-box">No completed complaints</div>}
       </div>
     </div>
   )

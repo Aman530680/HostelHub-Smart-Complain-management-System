@@ -58,13 +58,14 @@ export default function WorkerDashboard() {
         </button>
       </div>
 
-      {/* AVAILABLE WORK */}
-      <div className="complaints-section card">
-        <h3>Available Work ({availableComplaints.length})</h3>
+      <div className="dashboard-grid">
+        {/* AVAILABLE WORK */}
+        <div className="complaints-section card">
+          <h3>Available Work ({availableComplaints.length})</h3>
         {availableComplaints.map(c => (
           <div key={c.id} className="complaint-card">
             <div className="complaint-info">
-              <h4>{c.title}</h4>
+              <h4>{c.category} Issue</h4>
               <p><strong>Student:</strong> {c.student_name}</p>
               <p><strong>Room:</strong> {c.room_number}</p>
               <p><strong>Category:</strong> {c.category}</p>
@@ -79,16 +80,16 @@ export default function WorkerDashboard() {
             </div>
           </div>
         ))}
-        {availableComplaints.length === 0 && <p>No available work</p>}
-      </div>
+          {availableComplaints.length === 0 && <p>No available work</p>}
+        </div>
 
-      {/* MY IN PROGRESS WORK */}
-      <div className="complaints-section card">
-        <h3>My Work In Progress ({myInProgressComplaints.length})</h3>
+        {/* MY IN PROGRESS WORK */}
+        <div className="complaints-section card">
+          <h3>My Work In Progress ({myInProgressComplaints.length})</h3>
         {myInProgressComplaints.map(c => (
           <div key={c.id} className="complaint-card">
             <div className="complaint-info">
-              <h4>{c.title}</h4>
+              <h4>{c.category} Issue</h4>
               <p><strong>Student:</strong> {c.student_name}</p>
               <p><strong>Room:</strong> {c.room_number}</p>
               <p><strong>Category:</strong> {c.category}</p>
@@ -103,7 +104,8 @@ export default function WorkerDashboard() {
             </div>
           </div>
         ))}
-        {myInProgressComplaints.length === 0 && <p>No work in progress</p>}
+          {myInProgressComplaints.length === 0 && <p>No work in progress</p>}
+        </div>
       </div>
 
       {/* MY COMPLETED WORK */}
@@ -112,7 +114,7 @@ export default function WorkerDashboard() {
         {myCompletedComplaints.map(c => (
           <div key={c.id} className="complaint-card">
             <div className="complaint-info">
-              <h4>{c.title}</h4>
+              <h4>{c.category} Issue</h4>
               <p><strong>Student:</strong> {c.student_name}</p>
               <p><strong>Room:</strong> {c.room_number}</p>
               <p><strong>Category:</strong> {c.category}</p>

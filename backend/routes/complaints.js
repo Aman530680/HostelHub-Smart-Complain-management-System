@@ -8,9 +8,17 @@ const router = express.Router()
 router.post('/', async (req, res) => {
   try {
     const student = await Student.findById(req.body.student_id)
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' })
+    }
+    
     const complaint = new Complaint({
-      ...req.body,
-      student_name: student.name
+      description: req.body.description,
+      image: req.body.image || '',
+      category: req.body.category,
+      student_id: req.body.student_id,
+      student_name: student.name,
+      room_number: student.room_number
     })
     await complaint.save()
     res.json({ ...complaint.toObject(), id: complaint._id })
@@ -52,7 +60,12 @@ router.get('/worker/:workerId', async (req, res) => {
 // Update complaint (student edit)
 router.put('/:id', async (req, res) => {
   try {
-    const complaint = await Complaint.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    const updateData = {
+      description: req.body.description,
+      category: req.body.category,
+      image: req.body.image || ''
+    }
+    const complaint = await Complaint.findByIdAndUpdate(req.params.id, updateData, { new: true })
     res.json({ ...complaint.toObject(), id: complaint._id })
   } catch (err) {
     res.status(400).json({ message: err.message })
