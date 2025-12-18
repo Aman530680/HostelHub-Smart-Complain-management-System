@@ -1,12 +1,94 @@
-@import '../styles/variables.css';
-.worker-wrap{max-width:var(--max-width);margin:0 auto;display:flex;flex-direction:column;gap:14px}
-.worker-top{display:flex;justify-content:space-between;align-items:center;padding:12px}
-.worker-info{display:flex;gap:12px;align-items:center}
-.worker-list{padding:12px}
-.worker-item{display:flex;justify-content:space-between;gap:12px;padding:12px;border-radius:12px;border:1px solid rgba(16,24,40,0.04);background:#fff;margin-bottom:10px}
-.wi-left{flex:1}
-.wi-right{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
-.stat-btn{background:transparent;border:1px solid rgba(16,24,40,0.06);padding:8px 10px;border-radius:8px}
-.btn.completed{background:var(--accent);color:#fff}
-.refresh-area{display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px}
-@media(max-width:900px){.worker-item{flex-direction:column;align-items:flex-start}}
+.worker-wrap {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.worker-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.worker-header h2 {
+  margin: 0 0 8px 0;
+  color: #111827;
+}
+
+.worker-header p {
+  margin: 0 0 16px 0;
+  color: #6b7280;
+}
+
+.complaints-section {
+  margin-bottom: 24px;
+}
+
+.complaints-section h3 {
+  margin: 0 0 16px 0;
+  color: #374151;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 8px;
+}
+
+.complaint-card {
+  display: flex;
+  justify-content: between;
+  align-items: start;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  background: #f9fafb;
+}
+
+.complaint-info {
+  flex: 1;
+}
+
+.complaint-info h4 {
+  margin: 0 0 12px 0;
+  color: #111827;
+}
+
+.complaint-info p {
+  margin: 4px 0;
+  color: #374151;
+}
+
+.complaint-image {
+  width: 120px;
+  height: auto;
+  border-radius: 6px;
+  margin: 8px 0;
+}
+
+.complaint-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.btn.success {
+  background: #059669;
+  color: white;
+}
+
+.btn.success:hover {
+  background: #047857;
+}
+
+@media (max-width: 700px) {
+  .worker-wrap {
+    padding: 16px;
+  }
+  
+  .complaint-card {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .complaint-actions {
+    align-self: stretch;
+  }
+}

@@ -29,7 +29,7 @@ export default function Navbar() {
         {!user && <Link to="/login" className="btn">Login</Link>}
         {!user && <Link to="/register" className="btn outline">Register</Link>}
         {user && <div className="user-area">
-          <span className="small">Hi {user.id}</span>
+          <span className="small">Hi {user.name}</span>
           <button className="btn" onClick={onLogout}>Logout</button>
         </div>}
       </div>

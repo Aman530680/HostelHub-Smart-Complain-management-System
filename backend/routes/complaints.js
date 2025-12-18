@@ -1,8 +1,91 @@
 const express = require('express')
+const Complaint = require('../models/Complaint')
+const Student = require('../models/Student')
+const Worker = require('../models/Worker')
 const router = express.Router()
 
-router.get('/', (req, res) => {
-  res.json({ message: 'Complaints endpoint' })
+// Create complaint
+router.post('/', async (req, res) => {
+  try {
+    const student = await Student.findById(req.body.student_id)
+    const complaint = new Complaint({
+      ...req.body,
+      student_name: student.name
+    })
+    await complaint.save()
+    res.json({ ...complaint.toObject(), id: complaint._id })
+  } catch (err) {
+    res.status(400).json({ message: err.message })
+  }
+})
+
+// Get complaints by student
+router.get('/student/:studentId', async (req, res) => {
+  try {
+    const complaints = await Complaint.find({ student_id: req.params.studentId }).sort({ createdAt: -1 })
+    res.json(complaints.map(c => ({ ...c.toObject(), id: c._id })))
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+})
+
+// Get all complaints (for warden)
+router.get('/all', async (req, res) => {
+  try {
+    const complaints = await Complaint.find().sort({ createdAt: -1 })
+    res.json(complaints.map(c => ({ ...c.toObject(), id: c._id })))
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+})
+
+// Get complaints by worker
+router.get('/worker/:workerId', async (req, res) => {
+  try {
+    const complaints = await Complaint.find({ assigned_worker_id: req.params.workerId }).sort({ createdAt: -1 })
+    res.json(complaints.map(c => ({ ...c.toObject(), id: c._id })))
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+})
+
+// Update complaint (student edit)
+router.put('/:id', async (req, res) => {
+  try {
+    const complaint = await Complaint.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    res.json({ ...complaint.toObject(), id: complaint._id })
+  } catch (err) {
+    res.status(400).json({ message: err.message })
+  }
+})
+
+// Delete complaint
+router.delete('/:id', async (req, res) => {
+  try {
+    await Complaint.findByIdAndDelete(req.params.id)
+    res.json({ message: 'Complaint deleted' })
+  } catch (err) {
+    res.status(400).json({ message: err.message })
+  }
+})
+
+// Warden actions
+router.patch('/:id/status', async (req, res) => {
+  try {
+    const { status, assigned_worker_id, warden_comments } = req.body
+    const updateData = { status, warden_comments }
+    
+    if (assigned_worker_id) {
+      const worker = await Worker.findById(assigned_worker_id)
+      updateData.assigned_worker_id = assigned_worker_id
+      updateData.assigned_worker_name = worker.name
+    }
+    
+    const complaint = await Complaint.findByIdAndUpdate(req.params.id, updateData, { new: true })
+    res.json({ ...complaint.toObject(), id: complaint._id })
+  } catch (err) {
+    res.status(400).json({ message: err.message })
+  }
 })
 
 module.exports = router

@@ -4,18 +4,20 @@ import '../styles/status.css'
 
 export default function WardenDashboard() {
   const [complaints, setComplaints] = useState([])
-  const [filter, setFilter] = useState({ status: 'all', category: 'all' })
+  const [workers, setWorkers] = useState([])
   const [loading, setLoading] = useState(false)
-  const [messages, setMessages] = useState({})
+  const [selectedWorker, setSelectedWorker] = useState({})
+  const [wardenComments, setWardenComments] = useState({})
 
   useEffect(() => {
-    loadAll()
+    loadComplaints()
+    loadWorkers()
   }, [])
 
-  async function loadAll() {
+  async function loadComplaints() {
     setLoading(true)
     try {
-      const res = await fetch('http://localhost:5000/complaints')
+      const res = await fetch('http://localhost:5000/complaints/all')
       const data = await res.json()
       setComplaints(Array.isArray(data) ? data : [])
     } catch {
@@ -24,149 +26,148 @@ export default function WardenDashboard() {
     setLoading(false)
   }
 
-  function onMessageChange(id, value) {
-    setMessages(prev => ({ ...prev, [id]: value }))
+  async function loadWorkers() {
+    try {
+      const res = await fetch('http://localhost:5000/workers')
+      const data = await res.json()
+      setWorkers(Array.isArray(data) ? data : [])
+    } catch {
+      setWorkers([])
+    }
   }
 
-  async function decide(id, decision) {
-    const msg = messages[id] || ''
+  async function updateComplaintStatus(id, status, workerId = null) {
+    const body = {
+      status,
+      warden_comments: wardenComments[id] || ''
+    }
+    if (workerId) {
+      body.assigned_worker_id = workerId
+    }
+
     try {
-      const res = await fetch(`http://localhost:5000/complaints/${id}/decision`, {
-        method: 'POST',
+      const res = await fetch(`http://localhost:5000/complaints/${id}/status`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ decision, warden_message: msg })
+        body: JSON.stringify(body)
       })
       const data = await res.json()
       if (res.ok) {
-        setComplaints(prev => prev.map(p => p.id === data.id ? data : p))
+        setComplaints(prev => prev.map(c => c.id === data.id ? data : c))
+        setWardenComments(prev => ({ ...prev, [id]: '' }))
+        setSelectedWorker(prev => ({ ...prev, [id]: '' }))
       }
     } catch {}
   }
 
-  const activeComplaints = complaints.filter(
-    c => c.status !== 'resolved' && c.status !== 'completed'
-  )
+  function acceptComplaint(id) {
+    const workerId = selectedWorker[id]
+    if (!workerId) {
+      alert('Please select a worker to assign this complaint')
+      return
+    }
+    updateComplaintStatus(id, 'accepted', workerId)
+  }
 
-  const completedHistory = complaints.filter(
-    c => c.status === 'resolved' || c.status === 'completed'
-  )
+  const pendingComplaints = complaints.filter(c => c.status === 'pending')
+  const activeComplaints = complaints.filter(c => ['accepted', 'in-progress'].includes(c.status))
+  const completedComplaints = complaints.filter(c => ['completed', 'rejected'].includes(c.status))
 
   return (
     <div className="warden-wrap">
-      
-      <div className="warden-top card">
-        <h2>Warden — Admin Panel</h2>
-        <p className="small">Manage and monitor student complaints</p>
-        <button className="btn" onClick={loadAll}>
-          {loading ? 'Refreshing...' : 'Refresh'}
+      <div className="warden-header card">
+        <h2>Warden Dashboard</h2>
+        <p>Manage student complaints and assign workers</p>
+        <button className="btn" onClick={loadComplaints}>
+          {loading ? 'Loading...' : 'Refresh'}
         </button>
       </div>
 
-      {/* ACTIVE COMPLAINTS */}
-      <div className="list-panel card">
-        <h3>Active Complaints ({activeComplaints.length})</h3>
-
-        {activeComplaints.length === 0 && (
-          <div className="small muted">No active complaints</div>
-        )}
-
-        {activeComplaints.map(c => (
-          <div className="complaint-card" key={c.id}>
-            <div className="cc-left">
-              <div className="cc-top">
-                <div className="cc-title">
-                  <strong>{c.complaint_category}</strong>
-                  <div className="cc-meta small">{c.student_id}</div>
-                </div>
-                <div className="cc-status">
-                  <span className={`status-badge status-${c.status}`}>{c.status}</span>
-                </div>
-              </div>
-
-              <div className="cc-msg">{c.message}</div>
-
-              {c.image && (
-                <div className="cc-image">
-                  <img src={c.image} alt="complaint" />
-                </div>
-              )}
-
-              {c.worker_updates && c.worker_updates.length > 0 && (
-                <ul>
-                  {c.worker_updates.map((u, i) => (
-                    <li key={i}>{u.worker_id}: {u.message}</li>
+      {/* PENDING COMPLAINTS */}
+      <div className="complaints-section card">
+        <h3>Pending Complaints ({pendingComplaints.length})</h3>
+        {pendingComplaints.map(c => (
+          <div key={c.id} className="complaint-card">
+            <div className="complaint-info">
+              <h4>{c.title}</h4>
+              <p><strong>Student:</strong> {c.student_name}</p>
+              <p><strong>Room:</strong> {c.room_number}</p>
+              <p><strong>Category:</strong> {c.category}</p>
+              <p><strong>Description:</strong> {c.description}</p>
+              {c.image && <img src={c.image} alt="" className="complaint-image" />}
+            </div>
+            <div className="complaint-actions">
+              <div className="form-row">
+                <label>Assign Worker:</label>
+                <select 
+                  value={selectedWorker[c.id] || ''} 
+                  onChange={e => setSelectedWorker(prev => ({ ...prev, [c.id]: e.target.value }))}
+                  className="input"
+                >
+                  <option value="">Select Worker</option>
+                  {workers.filter(w => w.category === c.category).map(w => (
+                    <option key={w.id} value={w.id}>{w.name} ({w.category})</option>
                   ))}
-                </ul>
-              )}
-            </div>
-
-            {/* NO EDITING ALLOWED IF COMPLETED */}
-            <div className="cc-right">
-              <input
-                className="input"
-                placeholder="Message for worker"
-                value={messages[c.id] || ''}
-                onChange={e => onMessageChange(c.id, e.target.value)}
-              />
-
-              <div className="cc-actions">
-                <button className="btn" onClick={() => decide(c.id, 'accepted')}>Accept</button>
-                <button className="btn reject" onClick={() => decide(c.id, 'rejected')}>Reject</button>
+                </select>
+              </div>
+              <div className="form-row">
+                <label>Comments:</label>
+                <textarea 
+                  value={wardenComments[c.id] || ''}
+                  onChange={e => setWardenComments(prev => ({ ...prev, [c.id]: e.target.value }))}
+                  className="input"
+                  placeholder="Add comments..."
+                />
+              </div>
+              <div className="action-buttons">
+                <button className="btn" onClick={() => acceptComplaint(c.id)}>Accept & Assign</button>
+                <button className="btn danger" onClick={() => updateComplaintStatus(c.id, 'rejected')}>Reject</button>
               </div>
             </div>
           </div>
         ))}
+        {pendingComplaints.length === 0 && <p>No pending complaints</p>}
       </div>
 
-      {/* COMPLETED HISTORY */}
-      <div className="history-panel card">
-        <h3>Completed History ({completedHistory.length})</h3>
-
-        {completedHistory.length === 0 && (
-          <div className="small muted">No completed complaints yet</div>
-        )}
-
-        {completedHistory.map(c => (
-          <div className="complaint-card" key={c.id}>
-            <div className="cc-left">
-              <div className="cc-top">
-                <div className="cc-title">
-                  <strong>{c.complaint_category}</strong>
-                  <div className="cc-meta small">By {c.student_id}</div>
-                </div>
-                <div className="cc-status">
-                  <span className={`status-badge status-${c.status}`}>{c.status}</span>
-                </div>
-              </div>
-
-              <div className="cc-msg">{c.message}</div>
-
-              {c.image && (
-                <div className="cc-image">
-                  <img src={c.image} alt="img" />
-                </div>
-              )}
-
-              {c.worker_updates && c.worker_updates.length > 0 && (
-                <>
-                  <strong>Worker Updates:</strong>
-                  <ul>
-                    {c.worker_updates.map((u,i)=>(
-                      <li key={i}>{u.worker_id}: {u.message}</li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </div>
-
-            {/* READ ONLY - NO ACTIONS */}
-            <div className="cc-right">
-              <span className="small muted">No actions available</span>
+      {/* ACTIVE COMPLAINTS */}
+      <div className="complaints-section card">
+        <h3>Active Complaints ({activeComplaints.length})</h3>
+        {activeComplaints.map(c => (
+          <div key={c.id} className="complaint-card">
+            <div className="complaint-info">
+              <h4>{c.title}</h4>
+              <p><strong>Student:</strong> {c.student_name}</p>
+              <p><strong>Room:</strong> {c.room_number}</p>
+              <p><strong>Category:</strong> {c.category}</p>
+              <p><strong>Description:</strong> {c.description}</p>
+              <p><strong>Assigned to:</strong> {c.assigned_worker_name}</p>
+              <p><strong>Status:</strong> <span className={`status-badge status-${c.status}`}>{c.status}</span></p>
+              {c.image && <img src={c.image} alt="" className="complaint-image" />}
+              {c.warden_comments && <p><strong>Comments:</strong> {c.warden_comments}</p>}
             </div>
           </div>
         ))}
+        {activeComplaints.length === 0 && <p>No active complaints</p>}
       </div>
 
+      {/* COMPLETED COMPLAINTS */}
+      <div className="complaints-section card">
+        <h3>Completed Complaints ({completedComplaints.length})</h3>
+        {completedComplaints.map(c => (
+          <div key={c.id} className="complaint-card">
+            <div className="complaint-info">
+              <h4>{c.title}</h4>
+              <p><strong>Student:</strong> {c.student_name}</p>
+              <p><strong>Room:</strong> {c.room_number}</p>
+              <p><strong>Category:</strong> {c.category}</p>
+              <p><strong>Status:</strong> <span className={`status-badge status-${c.status}`}>{c.status}</span></p>
+              {c.assigned_worker_name && <p><strong>Handled by:</strong> {c.assigned_worker_name}</p>}
+              {c.warden_comments && <p><strong>Comments:</strong> {c.warden_comments}</p>}
+            </div>
+          </div>
+        ))}
+        {completedComplaints.length === 0 && <p>No completed complaints</p>}
+      </div>
     </div>
   )
 }

@@ -7,8 +7,10 @@ export default function StudentDashboard() {
   const user = getAuth()
   const [complaints, setComplaints] = useState([])
   const [form, setForm] = useState({
-    complaint_category: 'plumbing',
-    message: '',
+    title: '',
+    description: '',
+    room_number: '',
+    category: 'plumbing',
     image: ''
   })
   const [editing, setEditing] = useState(null)
@@ -50,12 +52,16 @@ export default function StudentDashboard() {
   async function createComplaint(e) {
     e.preventDefault()
     setError('')
-    if (!form.message.trim()) return setError('Message required')
+    if (!form.title.trim() || !form.description.trim() || !form.room_number.trim()) {
+      return setError('Title, description and room number are required')
+    }
 
     const body = {
       student_id: user.id,
-      complaint_category: form.complaint_category,
-      message: form.message,
+      title: form.title,
+      description: form.description,
+      room_number: form.room_number,
+      category: form.category,
       image: form.image
     }
 
@@ -68,7 +74,7 @@ export default function StudentDashboard() {
       const data = await res.json()
       if (!res.ok) throw new Error()
       setComplaints(prev => [data, ...prev])
-      setForm({ complaint_category: 'plumbing', message: '', image: '' })
+      setForm({ title: '', description: '', room_number: '', category: 'plumbing', image: '' })
     } catch {
       setError('Failed to submit complaint')
     }
@@ -77,8 +83,10 @@ export default function StudentDashboard() {
   function startEdit(c) {
     setEditing(c)
     setForm({
-      complaint_category: c.complaint_category,
-      message: c.message,
+      title: c.title,
+      description: c.description,
+      room_number: c.room_number,
+      category: c.category,
       image: c.image || ''
     })
     window.scrollTo({ top: 0 })
@@ -87,8 +95,10 @@ export default function StudentDashboard() {
   async function updateComplaint(e) {
     e.preventDefault()
     const body = {
-      complaint_category: form.complaint_category,
-      message: form.message,
+      title: form.title,
+      description: form.description,
+      room_number: form.room_number,
+      category: form.category,
       image: form.image
     }
 
@@ -102,97 +112,113 @@ export default function StudentDashboard() {
       if (!res.ok) throw new Error()
       setComplaints(prev => prev.map(x => x.id === data.id ? data : x))
       setEditing(null)
-      setForm({ complaint_category: 'plumbing', message: '', image: '' })
+      setForm({ title: '', description: '', room_number: '', category: 'plumbing', image: '' })
     } catch {
       setError('Failed to update complaint')
     }
   }
 
+  async function deleteComplaint(id) {
+    if (!window.confirm('Delete this complaint?')) return
+    try {
+      const res = await fetch(`http://localhost:5000/complaints/${id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error()
+      setComplaints(prev => prev.filter(c => c.id !== id))
+    } catch {
+      setError('Failed to delete complaint')
+    }
+  }
+
   function cancelEdit() {
     setEditing(null)
-    setForm({ complaint_category: 'plumbing', message: '', image: '' })
+    setForm({ title: '', description: '', room_number: '', category: 'plumbing', image: '' })
   }
 
   return (
     <div className="student-wrap">
       <div className="student-left card">
-        <h3>Student Dashboard</h3>
-
-        <button className="btn small" onClick={loadComplaints}>
-          {loading ? 'Refreshing...' : 'Refresh'}
-        </button>
+        <h3>{editing ? 'Edit Complaint' : 'Create New Complaint'}</h3>
 
         <form onSubmit={editing ? updateComplaint : createComplaint} className="complaint-form">
-          <label>Category</label>
-          <div className="category-list">
-            {['plumbing','electricity','carpentry','other'].map(c => (
-              <button
-                key={c}
-                type="button"
-                className={form.complaint_category === c ? 'pill active' : 'pill'}
-                onClick={() => setForm(prev => ({ ...prev, complaint_category: c }))}
-              >
-                {c}
-              </button>
-            ))}
+          <div className="form-row">
+            <label>Title</label>
+            <input name="title" value={form.title} onChange={onChange} className="input" required />
           </div>
 
-          <label>Upload Image</label>
-          <input type="file" accept="image/*" onChange={handleImageUpload} className="input" />
+          <div className="form-row">
+            <label>Room Number</label>
+            <input name="room_number" value={form.room_number} onChange={onChange} className="input" required />
+          </div>
+
+          <div className="form-row">
+            <label>Category</label>
+            <select name="category" value={form.category} onChange={onChange} className="input">
+              <option value="plumbing">Plumbing</option>
+              <option value="electricity">Electricity</option>
+              <option value="carpentry">Carpentry</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div className="form-row">
+            <label>Description</label>
+            <textarea name="description" value={form.description} onChange={onChange} className="input" rows="4" required />
+          </div>
+
+          <div className="form-row">
+            <label>Upload Image (Optional)</label>
+            <input type="file" accept="image/*" onChange={handleImageUpload} className="input" />
+          </div>
 
           {form.image && (
-            <img src={form.image} alt="" style={{ width: 160, marginTop: 8, borderRadius: 8 }} />
+            <div className="form-row">
+              <img src={form.image} alt="Preview" style={{ width: 200, borderRadius: 8 }} />
+            </div>
           )}
-
-          <label>Message</label>
-          <textarea name="message" value={form.message} onChange={onChange} className="input" />
 
           <div className="form-actions">
             <button className="btn" type="submit">{editing ? 'Update' : 'Submit'}</button>
             {editing && <button type="button" className="btn ghost" onClick={cancelEdit}>Cancel</button>}
           </div>
+          {error && <div className="error">{error}</div>}
         </form>
       </div>
 
       <div className="student-right card">
-        <h4>My Complaints</h4>
+        <div className="header-row">
+          <h4>My Complaints</h4>
+          <button className="btn small" onClick={loadComplaints}>
+            {loading ? 'Loading...' : 'Refresh'}
+          </button>
+        </div>
 
-        <button className="btn small" onClick={loadComplaints}>
-          {loading ? 'Refreshing...' : 'Refresh'}
-        </button>
-
-        <table className="complaint-table">
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Message</th>
-              <th>Image</th>
-              <th>Status</th>
-              <th>Edit</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {complaints.map(c => (
-              <tr key={c.id}>
-                <td>{c.complaint_category}</td>
-                <td>{c.message}</td>
-                <td>
-                  {c.image && <img src={c.image} alt="" style={{ width: 80, borderRadius: 6 }} />}
-                </td>
-                <td>
-                  <span className={`status-badge status-${c.status}`}>{c.status}</span>
-                </td>
-                <td>
-                  {c.status === 'pending'
-                    ? <button className="btn small" onClick={() => startEdit(c)}>Edit</button>
-                    : <span>-</span>
-                  }
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="complaints-list">
+          {complaints.map(c => (
+            <div key={c.id} className="complaint-item">
+              <div className="complaint-header">
+                <h5>{c.title}</h5>
+                <span className={`status-badge status-${c.status}`}>{c.status}</span>
+              </div>
+              <p><strong>Room:</strong> {c.room_number}</p>
+              <p><strong>Category:</strong> {c.category}</p>
+              <p><strong>Description:</strong> {c.description}</p>
+              {c.image && <img src={c.image} alt="" className="complaint-image" />}
+              {c.assigned_worker_name && <p><strong>Assigned to:</strong> {c.assigned_worker_name}</p>}
+              {c.warden_comments && <p><strong>Warden Comments:</strong> {c.warden_comments}</p>}
+              <div className="complaint-actions">
+                {c.status === 'pending' && (
+                  <>
+                    <button className="btn small" onClick={() => startEdit(c)}>Edit</button>
+                    <button className="btn small danger" onClick={() => deleteComplaint(c.id)}>Delete</button>
+                  </>
+                )}
+              </div>
+            </div>
+          ))}
+          {complaints.length === 0 && !loading && (
+            <p className="no-complaints">No complaints yet. Create your first complaint above.</p>
+          )}
+        </div>
       </div>
     </div>
   )
