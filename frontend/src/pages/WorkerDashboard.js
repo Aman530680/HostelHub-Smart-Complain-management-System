@@ -119,6 +119,7 @@ export default function WorkerDashboard() {
               <p><strong>Room:</strong> {c.room_number}</p>
               <p><strong>Category:</strong> {c.category}</p>
               <p><strong>Status:</strong> <span className="status-badge status-completed">Completed</span></p>
+              {c.image && <img src={c.image} alt="" className="complaint-image" />}
             </div>
           </div>
         ))}

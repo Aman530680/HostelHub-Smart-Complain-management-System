@@ -28,8 +28,8 @@ export default function Navbar() {
         {!user && <button className="link-btn" onClick={()=>scrollToId('about')}>About</button>}
         {!user && <button className="link-btn" onClick={()=>scrollToId('features')}>Features</button>}
         {!user && <button className="link-btn" onClick={()=>scrollToId('contact')}>Contact</button>}
-        {!user && <Link to="/login" className="btn">Login</Link>}
-        {!user && <Link to="/register" className="btn outline">Register</Link>}
+        {!user && <Link to="/login" className="btn white">Login</Link>}
+        {!user && <Link to="/register" className="btn white">Register</Link>}
         {user && <div className="user-area">
           <span className="small">Hi {user.name}</span>
           <button className="btn" onClick={onLogout}>Logout</button>

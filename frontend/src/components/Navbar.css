@@ -13,3 +13,5 @@
 .link-btn:hover{background:rgba(255,255,255,0.08)}
 .nav-right{display:flex;align-items:center;gap:10px}
 .user-area{display:flex;align-items:center;gap:8px;color:#fff}
+.btn.white{background:#fff;color:#000}
+.btn.white:hover{background:#f3f4f6;color:#000}
