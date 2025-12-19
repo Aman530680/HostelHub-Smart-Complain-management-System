@@ -1,0 +1,163 @@
+@import './variables.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html, 
+body, 
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app-container {
+  max-width: var(--max-width);
+  margin: 32px auto;
+  padding: 0 20px;
+}
+
+.card {
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid rgba(16, 24, 40, 0.04);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+}
+
+h1, h2, h3, h4 {
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
+
+p {
+  margin: 0 0 16px 0;
+  color: var(--muted);
+}
+
+.small {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid rgba(68, 142, 228, 0.2);
+}
+
+.btn.ghost:hover {
+  background: rgba(68, 142, 228, 0.05);
+}
+
+.btn.small {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  border-radius: 8px;
+}
+
+.input, 
+textarea, 
+select {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  background: #fff;
+  color: var(--text);
+  border: 1px solid rgba(16, 24, 40, 0.1);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus, 
+textarea:focus {
+  border-color: var(--primary);
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, 
+.table td {
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(16, 24, 40, 0.05);
+}
+
+.table th {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--muted-2);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+}
+
+.col {
+  flex: 1;
+}
+
+.right {
+  margin-left: auto;
+}
+
+.kv {
+  font-weight: 700;
+  color: var(--muted-2);
+}
+
+@media (max-width: 900px) {
+  .app-container {
+    padding: 16px;
+    margin: 16px auto;
+  }
+
+  .row {
+    flex-direction: column;
+    gap: 12px;
+  }
+}

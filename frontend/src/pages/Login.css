@@ -1,0 +1,51 @@
+.login-page {
+  max-width: 480px;
+  margin: 20px auto;
+}
+
+.card {
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.form-row {
+  margin-bottom: 12px;
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: #0ea5a4;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px 14px;
+  background: #0ea5a4;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.small {
+  display: block;
+  margin-top: 8px;
+  color: #f00;
+  font-size: 0.85rem;
+}

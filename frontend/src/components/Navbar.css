@@ -1,0 +1,77 @@
+@import '../styles/variables.css';
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(90deg, var(--primary), #2f78d6);
+  color: #fff;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.logo-img {
+  width: 48px;
+  height: 48px;
+  padding: 8px;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.brand {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.link-btn {
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.link-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+}
+
+.btn.white {
+  background: #fff;
+  color: #000;
+}
+
+.btn.white:hover {
+  background: #f3f4f6;
+}
